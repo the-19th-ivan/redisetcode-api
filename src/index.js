@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: '10kb' })); // Body parser, reading data from body into req.body
 
 /* ROUTES */
+app.use('/api/v1/users', require('./users'));
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
