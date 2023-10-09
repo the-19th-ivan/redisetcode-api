@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const User = require('../users/user');
+const Character = require('../characters/character');
 
 const AppError = require('../utils/appError.util');
 const catchAsync = require('../utils/catchAsync.util');
@@ -29,12 +30,15 @@ const createSendToken = (user, statusCode, res) => {
 
 // Signup
 exports.signup = catchAsync(async (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, characterId } = req.body;
+
+  const character = await Character.findById(characterId).select('name avatar');
 
   const user = await User.create({
     username,
     email,
     password,
+    character,
   });
 
   createSendToken(user, 201, res);
