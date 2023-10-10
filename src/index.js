@@ -23,6 +23,8 @@ app.use(express.json({ limit: '10kb' })); // Body parser, reading data from body
 app.use('/api/v1/users', require('./users'));
 app.use('/api/v1/auth', require('./auth'));
 app.use('/api/v1/characters', require('./characters'));
+app.use('/api/v1/regions', require('./regions'));
+app.use('/api/v1/zones', require('./zones'));
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

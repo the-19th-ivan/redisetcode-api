@@ -1,25 +1,25 @@
 const router = require('express').Router();
 
-const characterController = require('./characters.controller');
+const charactersController = require('./characters.controller');
 const { characterValidation } = require('./characters.middleware');
 const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
 router
   .route('/')
-  .get(characterController.getAll)
+  .get(charactersController.getAll)
   .post(
     isAuth,
     restrictTo('admin'),
     characterValidation,
     validator,
-    characterController.create,
+    charactersController.create,
   );
 
 router
   .route('/:id')
-  .get(characterController.getOne)
-  .patch(isAuth, restrictTo('admin'), characterController.update)
-  .delete(isAuth, restrictTo('admin'), characterController.delete);
+  .get(charactersController.getOne)
+  .patch(isAuth, restrictTo('admin'), charactersController.update)
+  .delete(isAuth, restrictTo('admin'), charactersController.delete);
 
 module.exports = router;
