@@ -27,6 +27,7 @@ app.use('/api/v1/regions', require('./regions'));
 app.use('/api/v1/zones', require('./zones'));
 app.use('/api/v1/stages', require('./stages'));
 app.use('/api/v1/badges', require('./badges'));
+app.use('/api/v1/quests', require('./quests'));
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
