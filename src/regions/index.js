@@ -7,7 +7,7 @@ const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
 router
   .route('/')
-  .get(isAuth, regionsController.getAll)
+  .get(regionsController.getAll)
   .post(
     isAuth,
     restrictTo('admin'),

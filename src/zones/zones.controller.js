@@ -68,3 +68,16 @@ exports.delete = catchAsync(async (req, res, next) => {
 
   res.status(204).json({});
 });
+
+exports.getZonesByRegion = catchAsync(async (req, res, next) => {
+  const { regionId } = req.params;
+
+  const zones = await Zone.find({ region: regionId });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      zones,
+    },
+  });
+});

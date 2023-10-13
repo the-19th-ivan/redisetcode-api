@@ -5,6 +5,8 @@ const { zoneValidation } = require('./zones.middleware');
 const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
+router.get('/:regionId/zones', isAuth, zonesController.getZonesByRegion);
+
 router
   .route('/')
   .get(isAuth, zonesController.getAll)

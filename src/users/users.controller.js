@@ -68,3 +68,12 @@ exports.delete = catchAsync(async (req, res, next) => {
 
   res.status(204).json({});
 });
+
+exports.myProfile = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: req.user,
+    },
+  });
+});

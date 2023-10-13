@@ -5,6 +5,8 @@ const { stageValidation } = require('./stages.middleware');
 const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
+router.get('/:zoneId/stages', isAuth, stagesController.getStagesByZone);
+
 router
   .route('/')
   .get(isAuth, restrictTo('admin'), stagesController.getAll)
