@@ -6,6 +6,7 @@ const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
 router.get('/:zoneId/stages', isAuth, stagesController.getStagesByZone);
+router.post('/:stageId/mark-as-done', isAuth, stagesController.markAsDone);
 
 router
   .route('/')
@@ -20,7 +21,7 @@ router
 
 router
   .route('/:id')
-  .get(isAuth, restrictTo('admin'), stagesController.getOne)
+  .get(isAuth, stagesController.getOne)
   .patch(isAuth, restrictTo('admin'), stagesController.update)
   .delete(isAuth, restrictTo('admin'), stagesController.delete);
 

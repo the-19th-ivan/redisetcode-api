@@ -105,3 +105,29 @@ exports.getStagesByZone = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.markAsDone = catchAsync(async (req, res, next) => {
+  const { stageId } = req.params;
+
+  const stage = await Stage.findById(stageId);
+
+  if (!stage) return next(new AppError('No stage with that ID found', 404));
+
+  const user = await User.findById(req.user._id);
+
+  if (user.completedStages.includes(stage._id))
+    return next(new AppError('This stage is already completed', 400));
+
+  user.completedStages.push(stage._id);
+  user.experience += stage.exp;
+  await user.save();
+
+  const nextStage = await Stage.findOne({ stageNumber: stage.stageNumber + 1 });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      nextStage: nextStage ? nextStage._id : '',
+    },
+  });
+});
