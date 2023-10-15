@@ -6,6 +6,7 @@ const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
 router.get('/my-profile', isAuth, usersController.myProfile);
+router.get('/leaderboard', usersController.leaderboard);
 
 router
   .route('/')

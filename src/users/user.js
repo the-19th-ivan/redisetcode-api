@@ -85,18 +85,16 @@ userSchema.pre('save', function (next) {
 userSchema.pre('save', function (next) {
   const { experience } = this;
 
-  if (experience >= 0 && experience <= 60) {
+  if (experience >= 0 && experience <= 50) {
     this.level = 1;
-  } else if (experience >= 61 && experience <= 150) {
+  } else if (experience >= 51 && experience <= 150) {
     this.level = 2;
   } else if (experience >= 151 && experience <= 250) {
     this.level = 3;
-  } else if (experience >= 251 && experience <= 400) {
+  } else if (experience >= 251 && experience <= 350) {
     this.level = 4;
-  } else if (experience >= 401 && experience <= 550) {
+  } else if (experience >= 351) {
     this.level = 5;
-  } else {
-    this.level = 9999;
   }
   // I will add more levels later
 

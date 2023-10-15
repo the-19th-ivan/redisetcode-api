@@ -77,3 +77,15 @@ exports.myProfile = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.leaderboard = catchAsync(async (req, res, next) => {
+  const users = await User.find({ role: 'user' }).sort({ experience: -1 });
+
+  res.status(200).json({
+    status: 'success',
+    results: users.length,
+    data: {
+      users,
+    },
+  });
+});
