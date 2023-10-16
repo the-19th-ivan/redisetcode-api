@@ -11,7 +11,6 @@ const questValidation = [
       if (quest) throw new Error('Quest already exists.');
       return true;
     }),
-  body('cover').trim().notEmpty().withMessage('Quest cover is required'),
   body('description')
     .trim()
     .notEmpty()

@@ -29,7 +29,6 @@ const userSchema = new Schema(
       avatar: String,
     },
     completedStages: [],
-    completedQuests: [],
     badges: [],
     level: {
       type: Number,

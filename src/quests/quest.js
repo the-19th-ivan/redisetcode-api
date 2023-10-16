@@ -10,10 +10,6 @@ const questSchema = new Schema({
     type: String,
     required: true,
   },
-  cover: {
-    type: String,
-    required: true,
-  },
   requirements: [String],
   questions: [
     {

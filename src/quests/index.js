@@ -5,6 +5,8 @@ const { questValidation } = require('./quests.middleware');
 const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
+router.get('/get', isAuth, questsController.getQuests);
+
 router
   .route('/')
   .get(isAuth, questsController.getAll)

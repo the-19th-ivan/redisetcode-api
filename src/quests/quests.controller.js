@@ -1,4 +1,5 @@
 const Quest = require('./quest');
+const Result = require('../result/result');
 
 const AppError = require('../utils/appError.util');
 const catchAsync = require('../utils/catchAsync.util');
@@ -67,4 +68,38 @@ exports.delete = catchAsync(async (req, res, next) => {
   if (!quest) return next(new AppError('No quest found with that ID', 404));
 
   res.status(204).json({});
+});
+
+exports.getQuests = catchAsync(async (req, res, next) => {
+  // Get the user ID of the currently logged-in user (you'll need to implement this)
+  const userId = req.user._id;
+
+  // Find all quests
+  const quests = await Quest.find();
+
+  // Find all results for the current user
+  const userResults = await Result.find({ user: userId });
+
+  // Create a map to keep track of which quests have been taken by the user
+  const userTakenQuests = new Map();
+  userResults.forEach((result) => {
+    userTakenQuests.set(result.quest.toString(), true);
+  });
+
+  // Create a list of quests with availability status
+  const questsWithStatus = quests.map((quest) => {
+    const isTaken = userTakenQuests.get(quest._id.toString()) || false;
+    return {
+      quest,
+      isAvailable: !isTaken,
+    };
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: questsWithStatus.length,
+    data: {
+      quests: questsWithStatus,
+    },
+  });
 });
