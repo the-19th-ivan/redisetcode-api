@@ -1,5 +1,6 @@
 const Quest = require('./quest');
 const Result = require('../result/result');
+const User = require('../users/user');
 
 const AppError = require('../utils/appError.util');
 const catchAsync = require('../utils/catchAsync.util');
@@ -100,6 +101,57 @@ exports.getQuests = catchAsync(async (req, res, next) => {
     results: questsWithStatus.length,
     data: {
       quests: questsWithStatus,
+    },
+  });
+});
+
+exports.submitAnswer = catchAsync(async (req, res, next) => {
+  const userId = req.user._id; // Extracted from the authenticated user
+  const { questId } = req.params;
+  const { userResponses } = req.body;
+
+  const user = await User.findById(userId);
+
+  // Find the quest by ID
+  const quest = await Quest.findById(questId);
+
+  if (!quest) {
+    return res.status(404).json({ message: 'Quest not found' });
+  }
+
+  let totalScore = 0;
+
+  // Iterate through userResponses and compare with quest's questions
+  userResponses.forEach((userResponse) => {
+    const matchingQuestion = quest.questions.find(
+      (question) => question.questionText === userResponse.questionText,
+    );
+
+    if (matchingQuestion && matchingQuestion.answer === userResponse.answer) {
+      totalScore += 1; // Increase score for correct answer
+    }
+  });
+
+  const isPassed = totalScore >= quest.passingScore;
+
+  if (isPassed) {
+    user.experience += quest.exp;
+  } else {
+    user.experience += Math.floor(quest.exp / 2);
+  }
+  await user.save();
+
+  const result = await Result.create({
+    user: userId,
+    quest: quest._id,
+    score: totalScore,
+    isPassed,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      result,
     },
   });
 });

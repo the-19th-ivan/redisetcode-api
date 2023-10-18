@@ -6,6 +6,7 @@ const validator = require('../utils/validator.util');
 const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
 router.get('/get', isAuth, questsController.getQuests);
+router.post('/:questId/submit', isAuth, questsController.submitAnswer);
 
 router
   .route('/')

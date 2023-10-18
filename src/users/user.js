@@ -95,6 +95,7 @@ userSchema.pre('save', function (next) {
   } else if (experience >= 351) {
     this.level = 5;
   }
+
   // I will add more levels later
 
   next();
