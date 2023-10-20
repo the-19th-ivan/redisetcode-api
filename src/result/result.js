@@ -10,6 +10,12 @@ const resultSchema = new Schema(
       type: SchemaTypes.ObjectId,
       ref: 'Quest',
     },
+    userResponses: [
+      {
+        questionText: String,
+        answer: String,
+      },
+    ],
     score: {
       type: Number,
     },

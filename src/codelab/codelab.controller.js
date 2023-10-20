@@ -7,7 +7,7 @@ const axios = require('axios');
 
 // Exported function that handles the compilation process
 exports.compiler = async (req, res) => {
-  const { code } = req.body; // Extract language and code from the request body
+  const { code, input } = req.body; // Extract language and code from the request body
   const fileName = 'main.cpp'; // Set the appropriate file name based on the language
   const url = 'https://glot.io/api/run/cpp/latest';
 
@@ -17,6 +17,7 @@ exports.compiler = async (req, res) => {
   };
 
   const data = {
+    stdin: input,
     files: [
       {
         name: fileName,

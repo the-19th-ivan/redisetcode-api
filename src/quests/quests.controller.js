@@ -144,6 +144,7 @@ exports.submitAnswer = catchAsync(async (req, res, next) => {
   const result = await Result.create({
     user: userId,
     quest: quest._id,
+    userResponses,
     score: totalScore,
     isPassed,
   });
@@ -152,6 +153,51 @@ exports.submitAnswer = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       result,
+    },
+  });
+});
+
+exports.viewResult = catchAsync(async (req, res, next) => {
+  const { questId } = req.params;
+  const userId = req.user._id;
+
+  // Find the result that matches the questId and userId
+  const result = await Result.findOne({
+    quest: questId,
+    user: userId,
+  }).populate('quest');
+
+  if (!result) {
+    return res.status(404).json({ message: 'Result not found' });
+  }
+
+  // Extract relevant information
+  const quizName = result.quest.name;
+  const { score } = result;
+
+  // Map user responses to include choices, user answers, correct answers, and correctness
+  const userResponses = result.quest.questions.map((question) => {
+    const userResponse = result.userResponses.find(
+      (response) => response.questionText === question.questionText,
+    );
+
+    return {
+      questionText: question.questionText,
+      choices: question.options,
+      userAnswer: userResponse ? userResponse.answer : '',
+      correctAnswer: question.answer, // Include correct answer
+      isCorrect: userResponse ? userResponse.answer === question.answer : false,
+    };
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      result: {
+        quizName,
+        score,
+        userResponses,
+      },
     },
   });
 });

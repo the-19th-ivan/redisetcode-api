@@ -7,6 +7,7 @@ const { isAuth, restrictTo } = require('../auth/auth.middleware');
 
 router.get('/get', isAuth, questsController.getQuests);
 router.post('/:questId/submit', isAuth, questsController.submitAnswer);
+router.get('/:questId/result', isAuth, questsController.viewResult);
 
 router
   .route('/')
