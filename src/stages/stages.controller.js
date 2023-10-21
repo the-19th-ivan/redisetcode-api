@@ -108,6 +108,7 @@ exports.getStagesByZone = catchAsync(async (req, res, next) => {
 
 exports.markAsDone = catchAsync(async (req, res, next) => {
   const { stageId } = req.params;
+  const { bonus } = req.body;
   let levelUp = false;
 
   const stage = await Stage.findById(stageId);
@@ -122,7 +123,7 @@ exports.markAsDone = catchAsync(async (req, res, next) => {
     return next(new AppError('This stage is already completed', 400));
 
   user.completedStages.push(stage._id);
-  user.experience += stage.exp;
+  user.experience += bonus ? stage.exp * 2 : stage.exp;
   await user.save();
 
   if (user.level !== currentLevel) levelUp = true;

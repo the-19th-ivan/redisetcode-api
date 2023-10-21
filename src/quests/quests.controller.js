@@ -108,7 +108,7 @@ exports.getQuests = catchAsync(async (req, res, next) => {
 exports.submitAnswer = catchAsync(async (req, res, next) => {
   const userId = req.user._id; // Extracted from the authenticated user
   const { questId } = req.params;
-  const { userResponses } = req.body;
+  const { userResponses, bonus } = req.body;
 
   const user = await User.findById(userId);
 
@@ -135,9 +135,11 @@ exports.submitAnswer = catchAsync(async (req, res, next) => {
   const isPassed = totalScore >= quest.passingScore;
 
   if (isPassed) {
-    user.experience += quest.exp;
+    user.experience += bonus ? quest.exp * 2 : quest.exp;
   } else {
-    user.experience += Math.floor(quest.exp / 2);
+    user.experience += bonus
+      ? Math.floor(quest.exp / 2) * 2
+      : Math.floor(quest.exp / 2);
   }
   await user.save();
 
