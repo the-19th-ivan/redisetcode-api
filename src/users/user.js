@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
-const { Schema, model } = require('mongoose');
+const { Schema, model, SchemaTypes } = require('mongoose');
 
 const userSchema = new Schema(
   {
@@ -28,8 +28,18 @@ const userSchema = new Schema(
       name: String,
       avatar: String,
     },
-    completedStages: [],
-    badges: [],
+    completedStages: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: 'Stage',
+      },
+    ],
+    badges: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: 'Badge',
+      },
+    ],
     level: {
       type: Number,
       default: 1,

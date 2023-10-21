@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../users/user');
 const Character = require('../characters/character');
+const Badge = require('../badges/badge');
 
 const AppError = require('../utils/appError.util');
 const catchAsync = require('../utils/catchAsync.util');
@@ -40,6 +41,13 @@ exports.signup = catchAsync(async (req, res, next) => {
     password,
     character,
   });
+
+  const users = await User.find({ role: 'user' });
+  if (users.length === 1) {
+    const badge = await Badge.findById('65335d072eee7695841b9aef');
+    user.badges.push(badge);
+    await user.save();
+  }
 
   createSendToken(user, 201, res);
 });

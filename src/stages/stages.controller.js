@@ -1,5 +1,6 @@
 const Stage = require('./stage');
 const User = require('../users/user');
+const Badge = require('../badges/badge');
 
 const AppError = require('../utils/appError.util');
 const catchAsync = require('../utils/catchAsync.util');
@@ -110,6 +111,7 @@ exports.markAsDone = catchAsync(async (req, res, next) => {
   const { stageId } = req.params;
   const { bonus } = req.body;
   let levelUp = false;
+  let badgeEarned = false;
 
   const stage = await Stage.findById(stageId);
 
@@ -124,6 +126,14 @@ exports.markAsDone = catchAsync(async (req, res, next) => {
 
   user.completedStages.push(stage._id);
   user.experience += bonus ? stage.exp * 2 : stage.exp;
+
+  // Check if the completed stage has a stageNumber of 1 and assign a badge
+  const badge = await Badge.findById('65335d932eee7695841b9af3');
+  if (stage.stageNumber === 1) {
+    badgeEarned = true;
+    user.badges.push(badge);
+  }
+
   await user.save();
 
   if (user.level !== currentLevel) levelUp = true;
@@ -135,6 +145,10 @@ exports.markAsDone = catchAsync(async (req, res, next) => {
     data: {
       nextStage: nextStage ? nextStage._id : '',
       levelUp,
+      earnBadge: {
+        flag: badgeEarned,
+        badge,
+      },
     },
   });
 });

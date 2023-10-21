@@ -70,10 +70,12 @@ exports.delete = catchAsync(async (req, res, next) => {
 });
 
 exports.myProfile = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id).populate('badges');
+
   res.status(200).json({
     status: 'success',
     data: {
-      user: req.user,
+      user,
     },
   });
 });
