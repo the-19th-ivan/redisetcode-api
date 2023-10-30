@@ -96,6 +96,18 @@ exports.getQuests = catchAsync(async (req, res, next) => {
     };
   });
 
+  // Sort the quests with isAvailable = true first
+  questsWithStatus.sort((a, b) => {
+    // Sort in descending order, so that true comes first
+    if (a.isAvailable === b.isAvailable) {
+      return 0;
+    }
+    if (a.isAvailable) {
+      return -1;
+    }
+    return 1;
+  });
+
   res.status(200).json({
     status: 'success',
     results: questsWithStatus.length,
@@ -111,6 +123,8 @@ exports.submitAnswer = catchAsync(async (req, res, next) => {
   const { userResponses, bonus } = req.body;
 
   const user = await User.findById(userId);
+  const currentLevel = user.level;
+  let levelUp = false;
 
   // Find the quest by ID
   const quest = await Quest.findById(questId);
@@ -143,6 +157,8 @@ exports.submitAnswer = catchAsync(async (req, res, next) => {
   }
   await user.save();
 
+  if (user.level !== currentLevel) levelUp = true;
+
   const result = await Result.create({
     user: userId,
     quest: quest._id,
@@ -155,6 +171,10 @@ exports.submitAnswer = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       result,
+      levelUp: {
+        flag: levelUp,
+        level: user.level,
+      },
     },
   });
 });

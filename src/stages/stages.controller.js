@@ -98,6 +98,12 @@ exports.getStagesByZone = catchAsync(async (req, res, next) => {
     return { stage, status: 'locked' };
   });
 
+  // Sort the categorized stages by status: "available" > "locked" > "completed"
+  categorizedStages.sort((a, b) => {
+    const statusOrder = { available: 0, locked: 1, completed: 2 };
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+
   // Send the categorized stages as a JSON response
   res.status(200).json({
     status: 'success',
@@ -144,7 +150,10 @@ exports.markAsDone = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       nextStage: nextStage ? nextStage._id : '',
-      levelUp,
+      levelUp: {
+        flag: levelUp,
+        level: user.level,
+      },
       earnBadge: {
         flag: badgeEarned,
         badge,
