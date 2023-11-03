@@ -6,6 +6,7 @@ const Badge = require('../badges/badge');
 
 const AppError = require('../utils/appError.util');
 const catchAsync = require('../utils/catchAsync.util');
+const sendEmail = require('../utils/email.util');
 
 // Create token
 const signToken = (id) =>
@@ -49,6 +50,23 @@ exports.signup = catchAsync(async (req, res, next) => {
     await user.save();
   }
 
+  const verificationLink = `http://localhost:8000/api/v1/auth/verify/${user._id}`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Verify Your Email',
+      message: 'Confirm and verify your account',
+      html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+    });
+    console.log('email sent');
+  } catch (err) {
+    console.log(err);
+    return next(
+      new AppError('There was an error sending the email. Try again later!'),
+      500,
+    );
+  }
   createSendToken(user, 201, res);
 });
 
@@ -65,4 +83,19 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // If everything ok, send token to client
   createSendToken(user, 200, res);
+});
+
+exports.emailVerification = catchAsync(async (req, res, next) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return next(new AppError('No user found', 404));
+  }
+
+  user.verified = true;
+  await user.save();
+
+  res.redirect('http://localhost:5173/map');
 });

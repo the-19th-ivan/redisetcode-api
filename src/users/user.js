@@ -58,13 +58,17 @@ const userSchema = new Schema(
       default: true,
       select: false,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     type: {
       type: String,
       enum: ['basic', 'pro'],
       default: 'basic',
     },
+    emailVerifyToken: String,
     passwordChangedAt: Date,
-    passwordResetToken: String,
     passwordResetExpires: Date,
   },
   {
@@ -133,19 +137,17 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
-userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
+userSchema.methods.createVerifyToken = function () {
+  const verifyToken = crypto.randomBytes(32).toString('hex');
 
-  this.passwordResetToken = crypto
+  this.emailVerifyToken = crypto
     .createHash('sha256')
-    .update(resetToken)
+    .update(verifyToken)
     .digest('hex');
 
-  // console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ verifyToken }, this.passwordverifyToken);
 
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-
-  return resetToken;
+  return verifyToken;
 };
 
 module.exports = model('User', userSchema);
