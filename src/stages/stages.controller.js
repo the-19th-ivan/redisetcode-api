@@ -78,20 +78,24 @@ exports.getStagesByZone = catchAsync(async (req, res, next) => {
 
   const stages = await Stage.find({ zone: zoneId });
 
-  // Categorize stages as "locked," "available," or "completed"
-  let available = false; // Indicates whether the next stage should be "available"
+  // Find the highest completed stage number
+  const highestCompletedStageNumber = Math.max(
+    ...user.completedStages.map((completedStage) => completedStage.stageNumber),
+  );
+
   const categorizedStages = stages.map((stage) => {
     const isCompleted = user.completedStages.some((completedStage) =>
       completedStage._id.equals(stage._id),
     );
 
     if (isCompleted) {
-      available = true; // Set available to true after finding a completed stage
       return { stage, status: 'completed' };
     }
 
-    if (available || stage.stageNumber === 1) {
-      available = false;
+    if (
+      stage.stageNumber === 1 ||
+      stage.stageNumber <= highestCompletedStageNumber + 1
+    ) {
       return { stage, status: 'available' };
     }
 
@@ -133,9 +137,30 @@ exports.markAsDone = catchAsync(async (req, res, next) => {
   user.completedStages.push(stage._id);
   user.experience += bonus ? stage.exp * 2 : stage.exp;
 
+  let badge;
   // Check if the completed stage has a stageNumber of 1 and assign a badge
-  const badge = await Badge.findById('65335d932eee7695841b9af3');
   if (stage.stageNumber === 1) {
+    badge = await Badge.findById('65335d932eee7695841b9af3');
+    badgeEarned = true;
+    user.badges.push(badge);
+  }
+  if (stage.stageNumber === 7) {
+    badge = await Badge.findById('65447eda49567baead204c01');
+    badgeEarned = true;
+    user.badges.push(badge);
+  }
+  if (stage.stageNumber === 9) {
+    badge = await Badge.findById('65447ffa49567baead204c0d');
+    badgeEarned = true;
+    user.badges.push(badge);
+  }
+  if (stage.stageNumber === 14) {
+    badge = await Badge.findById('654480db49567baead204c1d');
+    badgeEarned = true;
+    user.badges.push(badge);
+  }
+  if (stage.stageNumber === 15) {
+    badge = await Badge.findById('65335e122eee7695841b9af7');
     badgeEarned = true;
     user.badges.push(badge);
   }
