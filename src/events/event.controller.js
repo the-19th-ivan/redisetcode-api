@@ -22,11 +22,11 @@ function selectRandomEvent(events) {
 const events = [
   {
     event: 'Normal',
-    weight: 0.8,
+    weight: 0.75,
   },
   {
     event: 'Bonus',
-    weight: 0.2,
+    weight: 0.25,
   },
 ];
 
