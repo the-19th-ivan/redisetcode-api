@@ -25,12 +25,8 @@ const events = [
     weight: 0.8,
   },
   {
-    event: 'Hidden',
-    weight: 0.05,
-  },
-  {
     event: 'Bonus',
-    weight: 0.15,
+    weight: 0.2,
   },
 ];
 

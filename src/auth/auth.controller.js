@@ -57,7 +57,7 @@ exports.signup = catchAsync(async (req, res, next) => {
       email: user.email,
       subject: 'Verify Your Email',
       message: 'Confirm and verify your account',
-      html: `Click <a href="${verificationLink}">here</a> to verify your email.`,
+      html: `Ivan here from RediSetCode! Thank you for trying our app. Please click <a href="${verificationLink}">here</a> to verify your email.`,
     });
     console.log('email sent');
   } catch (err) {
