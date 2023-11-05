@@ -106,8 +106,38 @@ userSchema.pre('save', function (next) {
     this.level = 3;
   } else if (experience >= 251 && experience <= 350) {
     this.level = 4;
-  } else if (experience >= 351) {
+  } else if (experience >= 351 && experience <= 450) {
     this.level = 5;
+  } else if (experience >= 451 && experience <= 550) {
+    this.level = 6;
+  } else if (experience >= 551 && experience <= 650) {
+    this.level = 7;
+  } else if (experience >= 651 && experience <= 750) {
+    this.level = 8;
+  } else if (experience >= 751 && experience <= 850) {
+    this.level = 9;
+  } else if (experience >= 851 && experience <= 950) {
+    this.level = 10;
+  } else if (experience >= 951 && experience <= 1050) {
+    this.level = 11;
+  } else if (experience >= 1051 && experience <= 1150) {
+    this.level = 12;
+  } else if (experience >= 1151 && experience <= 1250) {
+    this.level = 13;
+  } else if (experience >= 1251 && experience <= 1350) {
+    this.level = 14;
+  } else if (experience >= 1351 && experience <= 1450) {
+    this.level = 15;
+  } else if (experience >= 1451 && experience <= 1550) {
+    this.level = 16;
+  } else if (experience >= 1551 && experience <= 1650) {
+    this.level = 17;
+  } else if (experience >= 1651 && experience <= 1750) {
+    this.level = 18;
+  } else if (experience >= 1751 && experience <= 1850) {
+    this.level = 19;
+  } else if (experience >= 1851) {
+    this.level = 20;
   }
 
   // I will add more levels later
