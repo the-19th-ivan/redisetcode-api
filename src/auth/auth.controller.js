@@ -97,5 +97,5 @@ exports.emailVerification = catchAsync(async (req, res, next) => {
   user.verified = true;
   await user.save();
 
-  res.redirect('http://localhost:5173/map');
+  res.redirect('https://redisetcode-react.vercel.app/map');
 });
