@@ -50,7 +50,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     await user.save();
   }
 
-  const verificationLink = `http://localhost:8000/api/v1/auth/verify/${user._id}`;
+  const verificationLink = `https://redisetcode-api.onrender.com/api/v1/auth/verify/${user._id}`;
 
   try {
     await sendEmail({
