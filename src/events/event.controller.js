@@ -35,32 +35,31 @@ exports.getEvent = catchAsync(async (req, res, next) => {
   const currentDate = new Date().toLocaleDateString('en-US', {
     timeZone: 'Asia/Manila',
   });
-  const existingEvent = await Event.findOne({ date: currentDate });
+  // const existingEvent = await Event.findOne({ date: currentDate });
 
-  if (existingEvent) {
-    res.status(200).json({
-      status: 'success',
-      data: {
-        event: existingEvent,
-        msg: 'There is an existing event.',
-      },
-    });
-  } else {
-    // If no event is assigned, use the random selection algorithm to pick one
-    const selectedEventName = selectRandomEvent(events);
+  // if (existingEvent) {
+  //   res.status(200).json({
+  //     status: 'success',
+  //     data: {
+  //       event: existingEvent,
+  //       msg: 'There is an existing event.',
+  //     },
+  //   });
+  // } else {
+  // If no event is assigned, use the random selection algorithm to pick one
+  const selectedEventName = selectRandomEvent(events);
 
-    // Create and save the new event with the current date
-    const selectedEvent = new Event({
-      name: selectedEventName,
-      date: currentDate,
-    });
-    await selectedEvent.save();
+  // Create and save the new event with the current date
+  const selectedEvent = new Event({
+    name: selectedEventName,
+    date: currentDate,
+  });
+  await selectedEvent.save();
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        event: selectedEvent,
-      },
-    });
-  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      event: selectedEvent,
+    },
+  });
 });
